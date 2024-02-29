@@ -12,7 +12,7 @@ void main() {
   late PostsBaseRepo repo;
   late GetPostUsecase usecase;
 
-  late Post post = Post.fromJson({
+  Post post = Post.fromJson({
     "id": "60d21aed67d0d8992e610b7f",
     "image": "https://img.dummyapi.io/photo-1582490738676-9ea599096c68.jpg",
     "likes": 13,
