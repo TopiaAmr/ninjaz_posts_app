@@ -100,7 +100,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
             status: PostsStatus.success,
             currentPostDetails: null,
             error: '',
-            posts: [...state.posts, ...posts],
+            posts: event.page == 0 ? posts : [...state.posts, ...posts],
           ),
         );
       },

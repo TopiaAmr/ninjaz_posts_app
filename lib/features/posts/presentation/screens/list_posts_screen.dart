@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:ninjaz_posts_app/core/services/service_locator.dart';
 import 'package:ninjaz_posts_app/features/posts/presentation/bloc/posts_bloc.dart';
+import 'package:ninjaz_posts_app/features/posts/presentation/widgets/plane_indicator.dart';
 
 class ListOfPostsScreen extends StatefulWidget {
   const ListOfPostsScreen({super.key});
@@ -68,18 +69,28 @@ class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
                 child: Text('No posts found'),
               );
             }
-            return ListView.builder(
-              itemCount: state.posts.length + 1,
-              controller: controller,
-              itemBuilder: (context, index) {
-                if (index < state.posts.length) {
-                  final post = state.posts[index];
-                  return ListTile(
-                    title: Text(post.text),
-                  );
+            return PlaneIndicator(
+              onRefresh: () async {
+                if (!await getIt<InternetConnection>().hasInternetAccess) {
+                  context.read<PostsBloc>().add(GetOfflinePostsEvent());
+                } else {
+                  context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
+                  context.read<PostsBloc>().add(GetPostsEvent(0));
                 }
-                return LinearProgressIndicator();
               },
+              child: ListView.builder(
+                itemCount: state.posts.length + 1,
+                controller: controller,
+                itemBuilder: (context, index) {
+                  if (index < state.posts.length) {
+                    final post = state.posts[index];
+                    return ListTile(
+                      title: Text(post.text),
+                    );
+                  }
+                  return LinearProgressIndicator();
+                },
+              ),
             );
           case PostsStatus.failure:
             return Center(
