@@ -5,10 +5,10 @@ import 'package:ninjaz_posts_app/core/usecase/no_paramas.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/entities/post.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/repository/posts_base_repo.dart';
 
-class GetPostUsecase extends BaseUseCase<List<Post>, NoParams> {
+class GetOfflinePostsUsecase extends BaseUseCase<List<Post>, NoParams> {
   final PostsBaseRepo _postsBaseRepo;
 
-  GetPostUsecase(this._postsBaseRepo);
+  GetOfflinePostsUsecase(this._postsBaseRepo);
 
   @override
   Future<Either<Failure, List<Post>>> call(NoParams posts) async {

@@ -9,8 +9,11 @@ import 'package:ninjaz_posts_app/features/posts/data/datasrouce/posts_remote_dat
 import 'package:ninjaz_posts_app/features/posts/data/entities/post_entity.dart';
 import 'package:ninjaz_posts_app/features/posts/data/repos/posts_repo.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/repository/posts_base_repo.dart';
+import 'package:ninjaz_posts_app/features/posts/domain/usecases/clear_offline_posts_usecase.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/usecases/get_post_usecase.dart';
+import 'package:ninjaz_posts_app/features/posts/domain/usecases/get_posts_offline_usecase.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/usecases/get_posts_usecase.dart';
+import 'package:ninjaz_posts_app/features/posts/domain/usecases/save_posts_offline_usecase.dart';
 import 'package:ninjaz_posts_app/features/posts/presentation/bloc/posts_bloc.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:realm/realm.dart';
@@ -40,10 +43,22 @@ class ServiceLocator {
     getIt.registerLazySingleton<GetPostsUsecase>(
       () => GetPostsUsecase(getIt()),
     );
+    getIt.registerLazySingleton<GetOfflinePostsUsecase>(
+      () => GetOfflinePostsUsecase(getIt()),
+    );
+    getIt.registerLazySingleton<SaveOfflinePostsUsecase>(
+      () => SaveOfflinePostsUsecase(getIt()),
+    );
+    getIt.registerLazySingleton<ClearOfflinePostsUsecase>(
+      () => ClearOfflinePostsUsecase(getIt()),
+    );
 
     /// Blocs
     getIt.registerLazySingleton(
       () => PostsBloc(
+        getIt(),
+        getIt(),
+        getIt(),
         getIt(),
         getIt(),
       ),

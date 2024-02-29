@@ -22,3 +22,25 @@ class GetPostEvent extends PostsEvent {
   @override
   List<Object> get props => [id];
 }
+
+class GetOfflinePostsEvent extends PostsEvent {
+  GetOfflinePostsEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ClearOfflinePostsEvent extends PostsEvent {
+  ClearOfflinePostsEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class SaveOfflinePostsEvent extends PostsEvent {
+  final List<Post> posts;
+  SaveOfflinePostsEvent(this.posts);
+
+  @override
+  List<Object> get props => [posts];
+}
