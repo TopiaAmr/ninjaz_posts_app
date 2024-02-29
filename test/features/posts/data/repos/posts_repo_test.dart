@@ -61,4 +61,20 @@ void main() {
       verifyNoMoreInteractions(datasource);
     });
   });
+
+  group('get posts', () {
+    test('should return a list of posts', () async {
+      when(() => datasource.getPosts(0)).thenAnswer(
+        (_) => Future.value(
+          <Post>[
+            fakePost.copyWith(id: '1'),
+          ],
+        ),
+      );
+      final result = await repo.getPosts(0);
+      expect(result, isA<Right<Failure, List<Post>>>());
+      verify(() => datasource.getPosts(0));
+      verifyNoMoreInteractions(datasource);
+    });
+  });
 }
