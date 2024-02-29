@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:ninjaz_posts_app/core/error/exception.dart';
 import 'package:ninjaz_posts_app/core/network/api_consumer.dart';
 import 'package:ninjaz_posts_app/core/network/dio_consumer.dart';
 import 'package:ninjaz_posts_app/core/services/service_locator.dart';
