@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:ninjaz_posts_app/core/services/service_locator.dart';
 import 'package:ninjaz_posts_app/core/usecase/no_paramas.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/entities/post.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/usecases/clear_offline_posts_usecase.dart';
@@ -72,6 +74,12 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     GetPostsEvent event,
     Emitter<PostsState> emit,
   ) async {
+    if (!await getIt<InternetConnection>().hasInternetAccess) {
+      if (state.posts.isEmpty) {
+        add(GetOfflinePostsEvent());
+      }
+      return;
+    }
     emit(state.copyWith(status: PostsStatus.loading));
     final res = await _getPostsUsecase(event.page);
     res.fold(
@@ -86,6 +94,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
         );
       },
       (posts) {
+        add(SaveOfflinePostsEvent(posts));
         emit(
           state.copyWith(
             status: PostsStatus.success,

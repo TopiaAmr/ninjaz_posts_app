@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:ninjaz_posts_app/core/services/service_locator.dart';
 import 'package:ninjaz_posts_app/features/posts/presentation/bloc/posts_bloc.dart';
 
 class ListOfPostsScreen extends StatefulWidget {
@@ -21,7 +23,14 @@ class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<PostsBloc>()..add(GetPostsEvent(page));
+    getIt<InternetConnection>().hasInternetAccess.then((isConnected) {
+      if (!isConnected) {
+        context.read<PostsBloc>().add(GetOfflinePostsEvent());
+      } else {
+        context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
+        context.read<PostsBloc>().add(GetPostsEvent(page));
+      }
+    });
   }
 
   int page = 0;

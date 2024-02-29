@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:ninjaz_posts_app/core/network/api_consumer.dart';
 import 'package:ninjaz_posts_app/core/network/dio_consumer.dart';
 import 'package:ninjaz_posts_app/features/posts/data/datasrouce/posts_local_datasource.dart';
@@ -72,6 +73,7 @@ class ServiceLocator {
     final config = Configuration.local([PostEntity.schema, OwnerEntity.schema]);
     getIt.registerLazySingleton<Realm>(() => Realm(config));
     getIt.registerLazySingleton(() => Dio());
+    getIt.registerLazySingleton<InternetConnection>(() => InternetConnection());
     getIt.registerLazySingleton(
       () => PrettyDioLogger(
         requestBody: true,
