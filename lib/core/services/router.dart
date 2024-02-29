@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ninjaz_posts_app/features/bottom_navigation/bottom_navigation.dart';
 
 /// The routes available in the app.
 enum AppRoutes {
@@ -19,7 +19,7 @@ final _router = GoRouter(
     GoRoute(
       name: AppRoutes.home.name,
       path: '/',
-      builder: (context, state) => Container(),
+      builder: (context, state) => BottomNavigation(),
     ),
   ],
 );

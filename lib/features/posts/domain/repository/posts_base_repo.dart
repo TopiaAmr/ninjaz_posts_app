@@ -5,8 +5,12 @@ import 'package:ninjaz_posts_app/features/posts/domain/entities/post.dart';
 /// Repository for managing [Post] entities
 abstract class PostsBaseRepo {
   /// Gets all available [Post] entities
-  Future<Either<Failure, List<Post>>> getPosts(int paga);
+  Future<Either<Failure, List<Post>>> getPosts(int page);
 
   /// Gets a single [Post] entity by its [id]
   Future<Either<Failure, Post>> getPost(String id);
+
+  Future<Either<Failure, void>> savePostsOffline(List<Post> posts);
+  Future<Either<Failure, void>> clearPostsOffline();
+  Future<Either<Failure, List<Post>>> getPostsOffline();
 }

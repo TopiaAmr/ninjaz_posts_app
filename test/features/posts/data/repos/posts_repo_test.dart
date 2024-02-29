@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:ninjaz_posts_app/core/error/failure.dart';
+import 'package:ninjaz_posts_app/features/posts/data/datasrouce/posts_local_datasource.dart';
 import 'package:ninjaz_posts_app/features/posts/data/datasrouce/posts_remote_datasource.dart';
 import 'package:ninjaz_posts_app/features/posts/data/repos/posts_repo.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/entities/post.dart';
@@ -12,6 +13,7 @@ import 'posts_remotesource_mock.dart';
 void main() {
   late PostsBaseRepo repo;
   late BasePostsRemoteDatasource datasource;
+  late BasePostsLocalDatasource localDatasource;
 
   const fakeError = ServerFailure(
     'error',
@@ -36,7 +38,8 @@ void main() {
 
   setUp(() {
     datasource = PostsRemoteDatasourceMock();
-    repo = PostsRepo(datasource);
+    localDatasource = PostsLocalDatasourceMock();
+    repo = PostsRepo(datasource, localDatasource);
     registerFallbackValue(fakePost);
   });
 

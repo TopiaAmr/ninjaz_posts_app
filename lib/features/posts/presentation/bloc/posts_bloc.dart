@@ -18,7 +18,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     this._getPostsUsecase,
   ) : super(
           const PostsState(
-            status: PostsStatus.loading,
+            status: PostsStatus.initial,
             posts: [],
             error: '',
             currentPostDetails: null,
@@ -59,8 +59,9 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     GetPostsEvent event,
     Emitter<PostsState> emit,
   ) async {
-    final posts = await _getPostsUsecase(state.page);
-    posts.fold(
+    emit(state.copyWith(status: PostsStatus.loading));
+    final res = await _getPostsUsecase(event.page);
+    res.fold(
       (failure) {
         emit(
           state.copyWith(
@@ -77,8 +78,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
             status: PostsStatus.success,
             currentPostDetails: null,
             error: '',
-            posts: posts,
-            page: state.page + 1,
+            posts: [...state.posts, ...posts],
           ),
         );
       },
