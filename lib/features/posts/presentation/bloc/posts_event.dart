@@ -6,12 +6,10 @@ abstract class PostsEvent extends Equatable {
 }
 
 class GetPostsEvent extends PostsEvent {
-  final int page;
-
-  GetPostsEvent(this.page);
+  GetPostsEvent();
 
   @override
-  List<Object> get props => [page];
+  List<Object> get props => [];
 }
 
 class GetPostEvent extends PostsEvent {
