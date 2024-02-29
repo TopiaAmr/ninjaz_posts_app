@@ -71,6 +71,7 @@ class ServiceLocator {
     );
 
     final config = Configuration.local([PostEntity.schema, OwnerEntity.schema]);
+    Realm.logger.level = RealmLogLevel.trace;
     getIt.registerLazySingleton<Realm>(() => Realm(config));
     getIt.registerLazySingleton(() => Dio());
     getIt.registerLazySingleton<InternetConnection>(() => InternetConnection());

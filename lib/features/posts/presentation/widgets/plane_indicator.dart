@@ -174,8 +174,10 @@ class _PlaneIndicatorState extends State<PlaneIndicator>
           ),
           builder: (BuildContext context, Widget? child) {
             return Transform.translate(
-              offset: Offset(0.0,
-                  10 * (0.5 - _planeTween.transform(_planeController.value))),
+              offset: Offset(
+                0.0,
+                10 * (0.5 - _planeTween.transform(_planeController.value)),
+              ),
               child: child,
             );
           },

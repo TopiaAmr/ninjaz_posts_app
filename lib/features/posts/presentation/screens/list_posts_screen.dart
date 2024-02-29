@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:lottie/lottie.dart';
 import 'package:ninjaz_posts_app/core/services/service_locator.dart';
 import 'package:ninjaz_posts_app/features/posts/presentation/bloc/posts_bloc.dart';
 import 'package:ninjaz_posts_app/features/posts/presentation/widgets/plane_indicator.dart';
@@ -24,12 +25,12 @@ class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
   @override
   void initState() {
     super.initState();
-    getIt<InternetConnection>().hasInternetAccess.then((isConnected) {
-      if (!isConnected) {
-        context.read<PostsBloc>().add(GetOfflinePostsEvent());
+    getIt<InternetConnection>().onStatusChange.listen((status) {
+      if (status == InternetStatus.connected) {
+        context.read<PostsBloc>().add(GetPostsEvent(page));
       } else {
         context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
-        context.read<PostsBloc>().add(GetPostsEvent(page));
+        context.read<PostsBloc>().add(GetOfflinePostsEvent());
       }
     });
   }
@@ -65,8 +66,21 @@ class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
           case PostsStatus.loading:
           case PostsStatus.success:
             if (state.posts.isEmpty) {
-              return const Center(
-                child: Text('No posts found'),
+              return Center(
+                child: TextButton(
+                  child: Text('No posts found'),
+                  onPressed: () async {
+                    final bool hasInternet =
+                        await getIt<InternetConnection>().hasInternetAccess;
+                    print(hasInternet);
+                    if (!hasInternet) {
+                      context.read<PostsBloc>().add(GetOfflinePostsEvent());
+                    } else {
+                      context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
+                      context.read<PostsBloc>().add(GetPostsEvent(0));
+                    }
+                  },
+                ),
               );
             }
             return PlaneIndicator(
@@ -88,13 +102,49 @@ class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
                       title: Text(post.text),
                     );
                   }
-                  return LinearProgressIndicator();
+                  return state.isOffline
+                      ? SizedBox.shrink()
+                      : LinearProgressIndicator();
                 },
               ),
             );
           case PostsStatus.failure:
-            return Center(
-              child: Text(state.error),
+            return PlaneIndicator(
+              onRefresh: () async {
+                if (!await getIt<InternetConnection>().hasInternetAccess) {
+                  context.read<PostsBloc>().add(GetOfflinePostsEvent());
+                } else {
+                  context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
+                  context.read<PostsBloc>().add(GetPostsEvent(0));
+                }
+              },
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 32,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Lottie.asset('assets/loading_error.json'),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Something went wrong, please try again",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             );
         }
       },

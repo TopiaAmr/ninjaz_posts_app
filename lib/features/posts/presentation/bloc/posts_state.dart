@@ -8,6 +8,7 @@ class PostsState extends Equatable {
   final Post? currentPostDetails;
   final String error;
   final int page;
+  final bool isOffline;
 
   const PostsState({
     required this.status,
@@ -15,6 +16,7 @@ class PostsState extends Equatable {
     required this.error,
     required this.currentPostDetails,
     this.page = 0,
+    this.isOffline = false,
   });
 
   @override
@@ -26,6 +28,7 @@ class PostsState extends Equatable {
     String? error,
     Post? currentPostDetails,
     int? page,
+    bool? isOffline,
   }) {
     return PostsState(
       status: status ?? this.status,
@@ -33,6 +36,7 @@ class PostsState extends Equatable {
       error: error ?? this.error,
       currentPostDetails: currentPostDetails ?? this.currentPostDetails,
       page: page ?? this.page,
+      isOffline: isOffline ?? this.isOffline,
     );
   }
 }

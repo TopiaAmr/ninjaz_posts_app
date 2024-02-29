@@ -17,6 +17,7 @@ class PostsLocalDatasource extends BasePostsLocalDatasource {
   @override
   Future<void> deletePosts() async {
     _realm.deleteAll<PostEntity>();
+    _realm.deleteAll<OwnerEntity>();
   }
 
   @override
@@ -45,7 +46,17 @@ class PostsLocalDatasource extends BasePostsLocalDatasource {
   Future<void> savePosts(List<Post> posts) async {
     _realm.write(
       () {
-        for (var post in posts) {
+        for (final post in posts) {
+          final res = _realm.add(
+            OwnerEntity(
+              post.owner.id,
+              post.owner.title,
+              post.owner.firstName,
+              post.owner.lastName,
+              post.owner.picture,
+            ),
+            update: true,
+          );
           _realm.add(
             PostEntity(
               post.id,
@@ -53,15 +64,10 @@ class PostsLocalDatasource extends BasePostsLocalDatasource {
               post.image,
               post.likes,
               post.publishDate,
-              owner: OwnerEntity(
-                post.owner.id,
-                post.owner.title,
-                post.owner.firstName,
-                post.owner.lastName,
-                post.owner.picture,
-              ),
+              owner: res,
               tags: post.tags,
             ),
+            update: true,
           );
         }
       },

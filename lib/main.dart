@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routerConfig: router,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
