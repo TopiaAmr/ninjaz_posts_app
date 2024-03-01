@@ -42,5 +42,4 @@ jobs:
           to: 'topia.amr@icloud.com'
           subject: 'GitHub Actions Job Status'
           body: 'Job ${{ github.job }} finished!'
-          attachment: '/home/runner/work/ninjaz_posts_app/ninjaz_posts_app/build/app/outputs/flutter-apk/app-release.apk'
-
+          attachment: 'build/app/outputs/apk/release/app-release.apk'

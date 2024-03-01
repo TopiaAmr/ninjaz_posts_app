@@ -5,7 +5,14 @@ import 'package:ninjaz_posts_app/features/posts/presentation/screens/list_posts_
 import 'package:ninjaz_posts_app/features/tab2/tab2_screen.dart';
 import 'package:ninjaz_posts_app/features/tab3/tab3_screen.dart';
 
+/// A widget that manages the bottom navigation bar.
+///
+/// This widget is responsible for managing the state of the bottom navigation
+/// bar and updating it accordingly. It uses a [BlocConsumer] widget to listen
+/// for changes in the [BottomNavigationBloc] and rebuild the widget tree
+/// accordingly.
 class BottomNavigation extends StatelessWidget {
+  /// Creates a [BottomNavigation] widget.
   const BottomNavigation({super.key});
 
   @override
@@ -17,10 +24,10 @@ class BottomNavigation extends StatelessWidget {
           body: SafeArea(
             child: IndexedStack(
               index: state.tabIndex,
-              children: [
-                const ListOfPostsScreen(),
-                const Tab2Screen(),
-                const Tab3Screen(),
+              children: const [
+                ListOfPostsScreen(),
+                Tab2Screen(),
+                Tab3Screen(),
               ],
             ),
           ),
@@ -43,16 +50,22 @@ class BottomNavigation extends StatelessWidget {
   }
 }
 
-const List<BottomNavigationBarItem> bottomNavItems =
-    const <BottomNavigationBarItem>[
+/// A list of [BottomNavigationBarItem]s that are used as the items in the
+/// bottom navigation bar.
+const List<BottomNavigationBarItem> bottomNavItems = <BottomNavigationBarItem>[
+  /// An icon with the [Icons.list] glyph and the label 'Posts'.
   BottomNavigationBarItem(
     icon: Icon(Icons.list),
     label: 'Posts',
   ),
+
+  /// An icon with the [Icons.tab] glyph and the label 'Tab 2'.
   BottomNavigationBarItem(
     icon: Icon(Icons.tab),
     label: 'Tab 2',
   ),
+
+  /// An icon with the [Icons.table_chart_outlined] glyph and the label 'Tab 3'.
   BottomNavigationBarItem(
     icon: Icon(Icons.table_chart_outlined),
     label: 'Tab 3',

@@ -6,10 +6,18 @@ import 'package:ninjaz_posts_app/features/posts/data/datasrouce/posts_remote_dat
 import 'package:ninjaz_posts_app/features/posts/domain/entities/post.dart';
 import 'package:ninjaz_posts_app/features/posts/domain/repository/posts_base_repo.dart';
 
-class PostsRepo extends PostsBaseRepo {
+/// The Repository to handle all the business logic related to the [Post] entity.
+///
+/// This class implements the [PostsBaseRepo] interface to provide the actual
+/// implementation for the business logic methods.
+class PostsRepo implements PostsBaseRepo {
+  /// The Remote Datasource to use to fetch data from the network.
   final BasePostsRemoteDatasource _datasource;
+
+  /// The Local Datasource to use to cache data locally.
   final BasePostsLocalDatasource _localDatasource;
 
+  /// Creates a [PostsRepo] with the given [_datasource] and [_localDatasource].
   PostsRepo(this._datasource, this._localDatasource);
 
   @override

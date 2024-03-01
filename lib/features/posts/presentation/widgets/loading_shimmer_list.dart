@@ -20,20 +20,25 @@ const Map<String, dynamic> _singlePost = {
   }
 };
 
+/// A loading shimmer list of posts
 class LoadingShimmerList extends StatelessWidget {
+  /// Creates a loading shimmer list of posts
   const LoadingShimmerList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Post fakePost = Post.fromJson(_singlePost);
+    final fakePost = Post.fromJson(_singlePost);
     return SingleChildScrollView(
       child: Column(
         children: [
           Shimmer(
+            /// The shimmer gradient
             gradient: const LinearGradient(colors: [
               Colors.grey,
               Colors.white,
             ]),
+
+            /// The post item widget to be displayed
             child: PostItemWidget(
               post: fakePost,
             ),
