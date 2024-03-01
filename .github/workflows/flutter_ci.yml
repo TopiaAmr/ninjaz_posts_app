@@ -14,13 +14,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+      
       - name: Install Flutter
-        uses: subosito/flutter-action@v1
+        id: flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.flutter_version }}
-
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:' 
+          cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:'
+          pub-cache-key: 'flutter-pub:os:-:channel:-:version:-:arch:-:hash:'
+      
       - name: Get dependencies
         run: flutter pub get
 
@@ -41,5 +50,5 @@ jobs:
         with:
           to: 'topia.amr@icloud.com'
           subject: 'GitHub Actions Job Status'
-          body: 'Job ${{ github.job }} finished!'
+          body:  'Job ${{ github.job }} finished! See the results here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} from: Ninja App version ${{ steps.flutter.outputs.VERSION }}'
           attachment: 'build/app/outputs/apk/release/app-release.apk'
