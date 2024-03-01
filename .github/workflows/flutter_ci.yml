@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 env:
-  flutter_version: "3.16.3"
+  flutter_version: "3.19.0"
 
 jobs:
   build-android:
