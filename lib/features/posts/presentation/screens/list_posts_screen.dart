@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:lottie/lottie.dart';
 import 'package:ninjaz_posts_app/core/services/service_locator.dart';
 import 'package:ninjaz_posts_app/features/posts/presentation/bloc/posts_bloc.dart';
-import 'package:ninjaz_posts_app/features/posts/presentation/widgets/plane_indicator.dart';
+import 'package:ninjaz_posts_app/features/posts/presentation/widgets/error_widget.dart';
+import 'package:ninjaz_posts_app/features/posts/presentation/widgets/loading_shimmer_list.dart';
+import 'package:ninjaz_posts_app/features/posts/presentation/widgets/post_item_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ListOfPostsScreen extends StatefulWidget {
   const ListOfPostsScreen({super.key});
@@ -15,6 +17,8 @@ class ListOfPostsScreen extends StatefulWidget {
 
 class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
   final ScrollController controller = ScrollController();
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void dispose() {
@@ -33,6 +37,16 @@ class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
         context.read<PostsBloc>().add(GetOfflinePostsEvent());
       }
     });
+  }
+
+  void _onRefresh() async {
+    if (!await getIt<InternetConnection>().hasInternetAccess) {
+      context.read<PostsBloc>().add(GetOfflinePostsEvent());
+    } else {
+      context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
+      context.read<PostsBloc>().add(GetPostsEvent(0));
+    }
+    _refreshController.refreshCompleted();
   }
 
   int page = 0;
@@ -61,46 +75,23 @@ class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
         switch (state.status) {
           case PostsStatus.initial:
             return const Center(
-              child: CircularProgressIndicator(),
+              child: LoadingShimmerList(),
             );
           case PostsStatus.loading:
           case PostsStatus.success:
             if (state.posts.isEmpty) {
-              return Center(
-                child: TextButton(
-                  child: Text('No posts found'),
-                  onPressed: () async {
-                    final bool hasInternet =
-                        await getIt<InternetConnection>().hasInternetAccess;
-                    print(hasInternet);
-                    if (!hasInternet) {
-                      context.read<PostsBloc>().add(GetOfflinePostsEvent());
-                    } else {
-                      context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
-                      context.read<PostsBloc>().add(GetPostsEvent(0));
-                    }
-                  },
-                ),
-              );
+              return LoadingShimmerList();
             }
-            return PlaneIndicator(
-              onRefresh: () async {
-                if (!await getIt<InternetConnection>().hasInternetAccess) {
-                  context.read<PostsBloc>().add(GetOfflinePostsEvent());
-                } else {
-                  context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
-                  context.read<PostsBloc>().add(GetPostsEvent(0));
-                }
-              },
+            return SmartRefresher(
+              controller: _refreshController,
+              onRefresh: _onRefresh,
               child: ListView.builder(
                 itemCount: state.posts.length + 1,
                 controller: controller,
                 itemBuilder: (context, index) {
                   if (index < state.posts.length) {
                     final post = state.posts[index];
-                    return ListTile(
-                      title: Text(post.text),
-                    );
+                    return PostItemWidget(post: post);
                   }
                   return state.isOffline
                       ? SizedBox.shrink()
@@ -109,40 +100,13 @@ class _ListOfPostsScreenState extends State<ListOfPostsScreen> {
               ),
             );
           case PostsStatus.failure:
-            return PlaneIndicator(
-              onRefresh: () async {
-                if (!await getIt<InternetConnection>().hasInternetAccess) {
-                  context.read<PostsBloc>().add(GetOfflinePostsEvent());
-                } else {
-                  context.read<PostsBloc>().add((ClearOfflinePostsEvent()));
-                  context.read<PostsBloc>().add(GetPostsEvent(0));
-                }
-              },
+            return SmartRefresher(
+              controller: _refreshController,
+              onRefresh: _onRefresh,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 32,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Lottie.asset('assets/loading_error.json'),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        "Something went wrong, please try again",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
+                child: TheErrorWidget(
+                  onRefresh: _onRefresh,
                 ),
               ),
             );
