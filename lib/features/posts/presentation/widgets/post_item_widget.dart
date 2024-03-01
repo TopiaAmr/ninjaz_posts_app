@@ -112,8 +112,9 @@ class PostItemWidget extends StatelessWidget {
                         CircleAvatar(
                           backgroundImage:
                               CachedNetworkImageProvider(post.owner.picture),
+                          radius: 14,
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 5),
                         Text(
                           "${post.owner.firstName} ${post.owner.lastName}",
                           textAlign: TextAlign.center,
