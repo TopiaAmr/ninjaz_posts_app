@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+/// A widget that displays an error message with a refresh button.
+///
+/// This widget is typically used when there is an error fetching data from
+/// the internet and the user should try again.
 class TheErrorWidget extends StatelessWidget {
+  /// Callback function that is called when the refresh button is pressed.
   final void Function()? onRefresh;
-  const TheErrorWidget({super.key, this.onRefresh});
+
+  /// Creates a [TheErrorWidget].
+  const TheErrorWidget({
+    super.key,
+    this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
