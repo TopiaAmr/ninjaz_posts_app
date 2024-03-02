@@ -17,6 +17,12 @@ jobs:
       - uses: futureware-tech/simulator-action@v3
         with:
           model: 'iPhone 14'
+      
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+            distribution: 'zulu'
+            java-version: 11
 
       - name: Install Flutter
         id: flutter
