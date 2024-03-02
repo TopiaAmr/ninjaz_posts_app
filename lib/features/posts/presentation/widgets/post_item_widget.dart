@@ -22,7 +22,12 @@ class PostItemWidget extends StatelessWidget {
                 placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
                 ),
-                errorWidget: (context, url, error) => const Placeholder(),
+                errorWidget: (context, url, error) => Image.asset(
+                  'assets/plane.png',
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  width: double.infinity,
+                ),
                 height: MediaQuery.of(context).size.height * 0.25,
                 width: double.infinity,
                 fit: BoxFit.cover,
