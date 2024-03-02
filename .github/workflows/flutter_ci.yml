@@ -10,7 +10,7 @@ env:
 jobs:
   build-android:
     # if: ${{ github.event.pull_request.merged }}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -29,19 +29,15 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       
-      - name: Enable KVM group perms
+      - name: Run Unit tests
+        run: dart run realm_dart install && flutter test
+
+      - name: 🚀 Run Integration Test
         run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-
-      - name: Run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: dart run realm_dart install && flutter test && flutter test integration_test
-          disable-animations: false
-
+          sudo safaridriver --enable
+          safaridriver --port 4444 &
+          flutter config --enable-web
+          flutter drive --driver=test_driver/integration_test.dart --target=e2e/home_scenario.dart -d web-server --profile --browser-name=safari
 
       - name: Build APK
         id: build
