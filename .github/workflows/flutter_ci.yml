@@ -44,6 +44,13 @@ jobs:
       - name: Send Email
         uses: cinotify/github-action@main
         with:
+          to: 'topia.amr@icloud.com'
+          subject: 'GitHub Actions Job Status'
+          body:  'Job ${{ github.job }} finished! \n \n See the results here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \n \n from: NinjazPosts App'
+      
+      - name: Send Another Email Copy
+        uses: cinotify/github-action@main
+        with:
           to: 'karim@ninjaz.ae'
           subject: 'GitHub Actions Job Status'
           body:  'Job ${{ github.job }} finished! \n \n See the results here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \n \n from: NinjazPosts App'
