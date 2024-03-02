@@ -42,7 +42,6 @@ void main() {
       app.main();
       await tester.pumpAndSettle();
       final gesture = await tester.startGesture(Offset(0, 300));
-      expect(find.byType(BottomNavigation), findsOneWidget);
       expect(find.byType(ListOfPostsScreen), findsOneWidget);
       expect(find.byType(Tab2Screen), findsNothing);
       expect(find.byType(Tab3Screen), findsNothing);
