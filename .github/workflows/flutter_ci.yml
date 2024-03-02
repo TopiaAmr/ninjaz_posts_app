@@ -9,27 +9,40 @@ env:
 
 jobs:
   build-android:
-    runs-on: ubuntu-latest
+    # if: ${{ github.event.pull_request.merged }}
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
+      - uses: futureware-tech/simulator-action@v3
+        with:
+          model: 'iPhone 14'
       
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+            distribution: 'zulu'
+            java-version: 11
+
       - name: Install Flutter
         id: flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
-          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:' # optional, change this to force refresh cache
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:' # optional, change this to force refresh cache
           cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:' # optional, change this to specify the cache path
-          pub-cache-key: 'flutter-pub:os:-:channel:-:version:-:arch:-:hash:' # optional, change this to force refresh cache of dart pub get dependencies
+          pub-cache-key: 'flutter-pub:os:-:channel:-:version:-:arch:' # optional, change this to force refresh cache of dart pub get dependencies
           flutter-version: ${{ env.flutter_version }}
             
       - name: Get dependencies
         run: flutter pub get
+      
+      - name: Run Unit tests
+        run: dart run realm_dart install && flutter test
 
-      - name: Run tests
-        run: dart run realm_dart install &&flutter test
+      - name: Run Integration Test
+        run: flutter test integration_test
 
       - name: Build APK
         id: build
@@ -45,5 +58,12 @@ jobs:
         uses: cinotify/github-action@main
         with:
           to: 'topia.amr@icloud.com'
+          subject: 'GitHub Actions Job Status'
+          body:  'Job ${{ github.job }} finished! \n \n See the results here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \n \n from: NinjazPosts App'
+      
+      - name: Send Another Email Copy
+        uses: cinotify/github-action@main
+        with:
+          to: 'karim@ninjaz.ae'
           subject: 'GitHub Actions Job Status'
           body:  'Job ${{ github.job }} finished! \n \n See the results here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \n \n from: NinjazPosts App'
