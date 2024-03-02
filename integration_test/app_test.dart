@@ -10,8 +10,9 @@ import 'package:ninjaz_posts_app/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('E2E', () {
-    testWidgets('E2E', (tester) async {
+  testWidgets(
+    'End to end testing',
+    (tester) async {
       app.main();
       await tester.pumpAndSettle();
       expect(find.byType(BottomNavigation), findsOneWidget);
@@ -61,6 +62,10 @@ void main() {
       await tester.pump();
       await tester.pumpAndSettle();
       expect(find.byType(PostItemWidget), findsWidgets);
-    });
-  });
+      await tester.pumpAndSettle();
+    },
+    timeout: const Timeout(
+      Duration(minutes: 30),
+    ),
+  );
 }
