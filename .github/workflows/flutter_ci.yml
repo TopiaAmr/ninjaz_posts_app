@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: futureware-tech/simulator-action@v3
         with:
-          model: 'iPhone 15'
+          model: 'iPhone 14'
 
       - name: Install Flutter
         id: flutter
