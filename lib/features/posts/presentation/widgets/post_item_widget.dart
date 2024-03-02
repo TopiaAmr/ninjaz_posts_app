@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:ninjaz_posts_app/features/posts/domain/entities/post.dart';
 
+const double kPostItemHeight = 250;
+
 class PostItemWidget extends StatelessWidget {
   const PostItemWidget({super.key, required this.post});
 
@@ -25,17 +27,17 @@ class PostItemWidget extends StatelessWidget {
                 errorWidget: (context, url, error) => Image.asset(
                   'assets/plane.png',
                   fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height * 0.25,
+                  height: kPostItemHeight,
                   width: double.infinity,
                 ),
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: kPostItemHeight,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.25,
+            height: kPostItemHeight,
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
