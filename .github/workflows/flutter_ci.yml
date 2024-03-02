@@ -36,7 +36,11 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Run tests
-        run: dart run realm_dart install && flutter test && flutter test integration_test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: dart run realm_dart install && flutter test && flutter test integration_test
+
 
       - name: Build APK
         id: build
