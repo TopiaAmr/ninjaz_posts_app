@@ -29,7 +29,7 @@ jobs:
         run: flutter pub get
 
       - name: Run tests
-        run: dart run realm_dart install && flutter test && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/counter_integation_test.dart -d web-server
+        run: dart run realm_dart install && flutter test && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d web-server
 
       - name: Build APK
         id: build
