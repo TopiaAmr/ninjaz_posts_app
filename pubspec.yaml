@@ -49,6 +49,8 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.4.7
   http_mock_adapter: ^0.6.1
+  integration_test:
+    sdk: flutter
   json_serializable: ^6.7.1
   mockito: ^5.4.4
   mocktail: ^1.0.3
