@@ -10,7 +10,7 @@ env:
 jobs:
   build-android:
     # if: ${{ github.event.pull_request.merged }}
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -28,11 +28,13 @@ jobs:
             
       - name: Get dependencies
         run: flutter pub get
-
-      - uses: futureware-tech/simulator-action@v3
-        with:
-          model: 'iPhone 14'
       
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Run tests
         run: dart run realm_dart install && flutter test && flutter test integration_test
 
