@@ -2,10 +2,7 @@ name: Flutter CI
 
 on:
   pull_request:
-    branches: 
-      - master
-    types: [closed]
-
+    branches: [master]
 
 env:
   flutter_version: "3.19.0"
