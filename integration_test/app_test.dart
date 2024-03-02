@@ -10,8 +10,8 @@ import 'package:ninjaz_posts_app/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Bottom Sheet Navigation', () {
-    testWidgets('Testing Bottom Sheet Navigation', (tester) async {
+  group('E2E', () {
+    testWidgets('E2E', (tester) async {
       app.main();
       await tester.pumpAndSettle();
       expect(find.byType(BottomNavigation), findsOneWidget);
@@ -34,12 +34,7 @@ void main() {
       expect(find.byType(Tab2Screen), findsNothing);
       expect(find.byType(Tab3Screen), findsOneWidget);
       expect(find.text('Coming Soon'), findsOneWidget);
-    });
-  });
-
-  group('Testing Posts List', () {
-    testWidgets('Testing Posts List', (tester) async {
-      app.main();
+      await tester.tap(find.text('Posts'));
       await tester.pumpAndSettle();
       final gesture = await tester.startGesture(Offset(0, 300));
       await gesture.moveBy(Offset(0, -300));
